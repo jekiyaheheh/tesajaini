@@ -1,0 +1,466 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Laporan Pemeliharaan OHRKR4</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    select, input[type="file"], input[type="datetime-local"] { display: block; margin-top: 10px; }
+    label { margin-top: 20px; display: block; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h2>LAPORAN PEMELIHARAAN OHRKR4</h2>
+
+  <label for="area">Area Operasi:</label>
+  <select id="area">
+    <option value="">-- Pilih Area --</option>
+  </select>
+
+  <label for="pltd">PLTD:</label>
+  <select id="pltd" disabled>
+    <option value="">-- Pilih PLTD --</option>
+  </select>
+
+  <label for="mesin">Nama Mesin:</label>
+  <select id="mesin" disabled>
+    <option value="">-- Pilih Mesin --</option>
+  </select>
+
+  <label for="pemeliharaan"><b>Pemeliharaan Yang Dilakukan:</b></label><br>
+  <select id="pemeliharaan" onchange="toggleLainnya()">
+    <option value="">-- Pilih Jenis Pemeliharaan --</option>
+    <option value="Ganti Oli">1. Ganti Oli</option>
+    <option value="Ganti Filter">2.Ganti Filter</option>
+    <option value="Cleaning Radiator">3. Cleaning Radiator</option>
+    <option value="Servis Generator">4. Servis Generator</option>
+    <option value="Cleaning Engine">5. Cleaning Engine</option>
+    <option value="Cleaning Racor">6. Cleaning Racor</option>
+    <option value="Lainnya">7. Lainnya</option>
+  </select><br><br>
+
+  <div id="lainnyaDiv" style="display:none;">
+    <label for="pemeliharaanLain"><i>Jenis Pemeliharaan Lainnya:</i></label><br>
+    <input type="text" id="pemeliharaanLain" placeholder="Isi Jenis Pemeliharaan..."><br><br>
+  </div>
+
+  <script>
+    function toggleLainnya() {
+      const pemeliharaan = document.getElementById("pemeliharaan").value;
+      const lainnyaDiv = document.getElementById("lainnyaDiv");
+
+      if (pemeliharaan === "Lainnya") {
+        lainnyaDiv.style.display = "block";
+      } else {
+        lainnyaDiv.style.display = "none";
+      }
+    }
+  </script>
+
+  <!-- Upload Foto Dokumentasi -->
+<form id="uploadForm">
+  <h3>Upload Gambar Dokumentasi</h3>
+
+  <label for="fotoSebelum"><b>Foto Sebelum:</b></label><br>
+  <input type="file" name="fotoSebelum" accept="image/*"><br><br>
+
+  <label for="fotoProses"><b>Foto Proses:</b></label><br>
+  <input type="file" name="fotoProses" accept="image/*"><br><br>
+
+  <label for="fotoSesudah"><b>Foto Sesudah:</b></label><br>
+  <input type="file" name="fotoSesudah" accept="image/*"><br><br>
+
+</form>
+
+
+<script>
+  function previewFoto(input, previewId) {
+    const preview = document.getElementById(previewId);
+    const file = input.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+</script>
+
+
+  <label for="waktu">Waktu Dokumentasi:</label>
+  <input type="datetime-local" id="waktu">
+
+  <label for="namaPegawai"><b>Nama Pegawai:</b></label>
+  <input type="text" id="namaPegawai" placeholder="Masukan nama pegawai..."><br><br>
+  <button onclick="submitForm()">Submit</button>
+  
+  <script>
+    function submitForm(){
+      const namaPegawai = document.getElementById("namaPegawai").value;
+      const area = document.getElementById("area").value;
+      const pltd = document.getElementById("pltd").value;
+      const mesin = document.getElementById("mesin").value;
+      const waktu = document.getElementById("waktu").value;
+      const pemeliharaan = document.getElementById("pemeliharaan").value;
+
+      const data = {
+        namaPegawai: namaPegawai,
+        area: area,
+        pltd: pltd,
+        mesin: mesin,
+        waktu:waktu,
+        pemeliharaan: pemeliharaan
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbz9lwI6j-a6W3G-4xQXrdq-9_JbbxkBiTuhOi3QX22k-HQ9kkKl_nErV3KmI4nSQza1dg/exec", {
+        method: "POST",
+        mode:"no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body:JSON.stringify(data)
+      }).then(() => {
+        alert("Data berhasil dikirim ke Google Sheets.");
+      }).catch(() => {
+        alert("Gagal mengirim data.");
+      });
+    } 
+  </script>
+
+  <script>
+    const data = {
+  "TEMBILAHAN": {
+    "PLTD SEI GUNTUNG": [
+      "1. Daihatsu 6 DL-22 DL 622814",
+      "2. Daihatsu 6 DL-22 DL 622813",
+      "3. Caterpillar 3512B LY800118",
+      "4. Caterpillar 3512B LY800138",
+      "5. Caterpillar 3512B LY800137",
+      "6. Cummins 250 kva",
+      "7. Perkins 400 kva"
+    ],
+    "PLTD GONCONG LUAR": [
+      "1. Deutz F 10L 413F 84103.C.125",
+      "2. Deutz F 10L 413F 84103.D.135",
+      "3. Komatsu S6D 140-1 23379",
+      "4. Deutz F 10L 413F 84103.D.0132",
+      "5. Komatsu SA6D 140-1 21857",
+      "6. Komatsu SAA6D 140-P580 42578",
+      "7. Komatsu SAA6D 140-P580 42937"
+    ],
+    "PLTD PERIGI RAJA": [
+      "1. Komatsu SA6D 110-1 67493",
+      "2. Komatsu S6D 125-1 119069"
+    ],
+    "PLTD BEKAWAN": [
+      "1. Komatsu SA6D 110-1 67494",
+      "2. Caterpillar 3512B LY800160",
+      "3. Komatsu S6D 125-1 119057",
+      "4. Deutz F 10L 413F 21038474"
+    ],
+    "PLTD IGAL": [
+      "1. Deutz F 10L 413F 84103.C.0120",
+      "2. Deutz F 10L 413F 7113100"
+    ],
+    "PLTD PULAU BURUNG": [
+      "1. Cummins QSK23-G3 85003045",
+      "2. Cummins QSK23-G3 85003213",
+      "3. Cummins QSK23-G3 85003073",
+      "4. Caterpillar 3512B LY800151",
+      "5. Caterpillar 3512B LY800158"
+    ],
+    "PLTD TANJUNG LAJAU": [
+      "1. Komatsu S6D 108-1 22295",
+      "2. Komatsu SAA6D102E-P150 26496635"
+    ],
+    "PLTD CAWAN": [
+      "1. Deutz F 10L 413F 7113106",
+      "2. Cummins 6BT5 9-G2 69475703"
+    ]
+  },
+  "KUALA ENOK": {
+    "PLTD SUNGAI LAUT": [
+      "1. Deutz F 10L 413F 7113093",
+      "2. Komatsu S6D 140A-1 21308"
+    ],
+    "PLTD SUNGAI BELA": [
+      "1. Deutz F 10L 413F 6711905",
+      "2. MAN D2840LE201 4643 5588063555"
+    ],
+    "PLTD TANJUNG PASIR": [
+      "1. Komatsu S6D 110-1 67986",
+      "2. Deutz F 10L 413F 6355215"
+    ],
+    "PLTD SUNGAI BULUH": [
+      "1. Komatsu S6D 108-1 23682",
+      "2. Deutz F 10L 413F 84103.C.0121"
+    ],
+    "PLTD PULAU RUKU": [
+      "1. Komatsu S6D 108-1 23238",
+      "2. CUMMINS 6BT5 9-G2 69474602"
+    ]
+  },
+  "DABO SINGKEP": {
+    "PLTD SETAJAM": [
+      "1. MAK 8M 452 AK 25211",
+      "2. Caterpillar 3512B LY800216",
+      "3. Caterpillar 3512B LY800210",
+      "4. Caterpillar 3512B LY800203",
+      "5. Caterpillar 3512B LY800209",
+      "6. NON PLN"
+    ],
+    "PLTD MUSAI": [
+      "1. Cummins QSK23-G3 85003177",
+      "2. Cummins QSK23-G3 85003210",
+      "3. Cummins QSK23-G3 85003119",
+      "4. Cummins QSK23-G3 85003203",
+      "5. Cummins QSK23-G3 85003102",
+      "6. MAN D2842LE201 4944 5898164582",
+      "7. MAN D2842LE201 4944 7948204798",
+      "8. MTU 12 V 2000G 65 0"
+    ],
+    "PLTD SENAYANG": [
+      "1. Deutz F10L413F 7751299",
+      "2. Komatsu S6D 108-1 23681",
+      "3. Deutz F10L413F 84103.A.0025",
+      "4. Perkins 2206A-E13TAG3 TGDE8025N06658C"
+    ],
+    "PLTD PENUBA": [
+      "1. Deutz TCD TCD2013LO6 4V 12006161",
+      "2. Perkins 2206A-E13TAG3 TGDE8025N06657C"
+    ],
+    "PLTD REJAI": [
+      "1. Deutz F10L413F 84103.D.0152",
+      "2. Deutz F10L413F 7113081"
+    ],
+    "PLTD TEMIANG": [
+      "1. Deutz F10L413F 84103.D.0146",
+      "2. Deutz F10L413F 7137123"
+    ],
+    "PLTD MEPAR": [
+      "1. Komatsu 6D95-L1 151176",
+      "2. Weifang 4105 R4105ZD 23052087"
+    ],
+    "PLTD BENAN": [
+      "1. Komatsu SA6D110-1 65970",
+      "2. Komatsu SA6D 140 0"
+    ],
+    "PLTD POSEK": [
+      "1. Komatsu S6D 110-1 66690",
+      "2. Perkins 2000 TWG 8D27611U90191W",
+      "3. Komatsu S6D1401 17051"
+    ],
+    "PLTD MENTUDA": [
+      "1. Deutz F10L413F 84103.D.0163"
+    ],
+    "PLTD MEDANG": [
+      "1. Deutz F10L413F 6711837"
+    ],
+    "PLTD BATANG": [
+      "1. Deutz F10L413F 84103.D.0126",
+      "2. DEUTZ 2 F 10 L 413 F 7113107"
+    ],
+    "PLTD CEMPA": [
+      "1. Deutz F10L413F 84103.A.0029"
+    ],
+    "PLTD BARAN": [
+      "1. Deutz F10L413F 7113078"
+    ],
+    "PLTD MAMUT": [
+      "1. Deutz F10L413F 6712047"
+    ],
+    "PLTD TANJUNG KELIT": [
+      "1. Komatsu SA6D110-1 65971"
+    ],
+    "PLTD TEBAN": [
+      "1. Deutz F10L413F 84103.C.0088"
+    ],
+    "PLTD PASIR PANJANG": [
+      "1. Deutz F10L413F 6712052"
+    ],
+    "PLTD LABOH": [
+      "1. Deutz F10L413F 6711896"
+    ],
+    "PLTD SUAK BUAYA": [
+      "1. Deutz TCD2013LO6 4V 11966097"
+    ],
+    "PLTD BATU BERLOBANG": [
+      "1. Deutz TCD2013LO6 4V 11953949"
+    ],
+    "PLTD DUYUNG": [
+      "1. Komatsu 6D95-L1 151174"
+    ],
+    "PLTD PULAU BUKIT": [
+      "1. Cummins 6BT59-G2 69475709"
+    ],
+    "PLTD PENAAH": [
+      "1. Cummins NTA 885-G6 23238945"
+    ],
+    "PLTD  MENSANAK": [
+      "1. Cummins NTA 885-G4 3041951"
+    ],
+    "PLTD BERHALA": [
+      "1. Deutz F6L912 5655574"
+    ],
+    "PLTD PEKAJANG": [
+      "1. Komatsu S6D110-1 67979"
+    ],
+    "PLTD KELOMBOK": [
+      "1. Komatsu SA6D110-1 66684"
+    ],
+    "PLTD BUSUNG PANJANG": [
+      "1. Komatsu S6D 108-1 23671"
+    ]
+  },
+  "BELAKANG PADANG": {
+    "PLTD PULAU KASU": [
+      "1. Komatsu SA6D 110-1 66685",
+      "2. Cummins 6CTA 8,3-G 44874859",
+      "3. Deutz F10L413F 7137387",
+      "4. Komatsu S6D 108-1 23674"
+    ],
+    "PLTD PULAU TERONG": [
+      "1. Deutz F10L413F 84103.D.0162",
+      "2. Deutz F10L413F 7751293",
+      "3. Deutz F10L413F 7133402",
+      "4. Deutz F10L413F 84103.D.0144"
+    ],
+    "PLTD PECONG": [
+      "1. Komatsu SA6D 110-1 67971",
+      "2. Komatsu SA6D 110-1 65973"
+    ],
+    "PLTD PULAU ABANG": [
+      "1. Komatsu SA6D 110-1 66691",
+      "2. Komatsu SA6D 110-1 66688"
+    ],
+    "PLTD BULANG LINTANG": [
+      "1. Komatsu SA6D 140A-1 21908"
+    ],
+    "PLTD TEMOYONG": [
+      "1. Cummins 6CT 8,3G 44935867"
+    ],
+    "PLTD AIR RAJA": [
+      "1. Cummins 6CT 8,3G 0",
+      "2. Deutz F10L413F 7113097"
+    ],
+    "PLTD BATU LEGONG": [
+      "1. Cummins 6BT5.9-G2 69475895"
+    ],
+    "PLTD PANTAI GELAM": [
+      "1. Weifang Tianhe K4100 D 8090289",
+      "2. Weifang Tianhe K4100 D 8090298"
+    ],
+    "PLTD SELAT NENEK": [
+      "1. Komatsu SA6D 140A-1 21716"
+    ],
+    "PLTD JALOH": [
+      "1. Komatsu S6D 108-1 23676"
+    ],
+    "PLTMG PEMPING": [
+      "1. Caterpillar G3306 HCC00551",
+      "2. Caterpillar G3306 HCC00552"
+    ]
+  },
+  "TANJUNGPINANG KOTA": {
+    "PLTD KARAS": [
+      "1. Deutz F10L413F 84103.D.0155",
+      "2. Deutz F10L413F 6355246",
+      "3. Deutz F10L413F 7137121",
+      "4. Komatsu S6D125-1 0"
+    ],
+    "PLTD PANGKIL": [
+      "1. Komatsu S6D125-1 116220",
+      "2. Deutz F10L413F 7134386"
+    ]
+  },
+  "KIJANG": {
+    "PLTD KELONG": [
+      "1. Cummins QSK23-G3 85002998",
+      "2. MTU 12V2000 G65 535300976"
+    ],
+    "PLTD MANTANG": [
+      "1. Deutz F10L413F 84103.C.0095",
+      "2. Deutz F10L413F 6711925",
+      "3. Deutz F10L413F 84103.C.0078",
+      "4. Komatsu SA6D 110-1 65975"
+    ],
+    "PLTD DENDUN": [
+      "1. Deutz F10L413F 84103.C.0100",
+      "2. Volvo Penta TD 720 GE 5300811131",
+      "3. Cummins 6CTA8.3-G2 87744060"
+    ],
+    "PLTD MAPUR": [
+      "1. Komatsu SA6D 125-1 88732"
+    ],
+    "PLTD NUMBING": [
+      "1. MAN D2842LE201 4944 5648034546"
+    ],
+    "PLTD MENTEBUNG": [
+      "1. Cummins 6BT5.9-G2 69475707"
+    ],
+    "PLTD PULAU PINANG": [
+      "1. Deutz F10L413F 6712084"
+    ],
+    "PLTD PENGIKIK": [
+      "1. Perkins 404D-22G R047889E",
+      "2. Cummins 6BT5.9-G2 69475893"
+    ]
+  }
+};
+
+    const areaSelect = document.getElementById("area");
+    const pltdSelect = document.getElementById("pltd");
+    const mesinSelect = document.getElementById("mesin");
+
+    // Isi dropdown Area
+    Object.keys(data).forEach(area => {
+      const opt = document.createElement("option");
+      opt.value = area;
+      opt.textContent = area;
+      areaSelect.appendChild(opt);
+    });
+
+    areaSelect.addEventListener("change", function () {
+      const selectedArea = this.value;
+      pltdSelect.innerHTML = '<option value="">-- Pilih PLTD --</option>';
+      mesinSelect.innerHTML = '<option value="">-- Pilih Mesin --</option>';
+      mesinSelect.disabled = true;
+
+      if (data[selectedArea]) {
+        pltdSelect.disabled = false;
+        Object.keys(data[selectedArea]).forEach(pltd => {
+          const opt = document.createElement("option");
+          opt.value = pltd;
+          opt.textContent = pltd;
+          pltdSelect.appendChild(opt);
+        });
+      } else {
+        pltdSelect.disabled = true;
+      }
+    });
+
+    pltdSelect.addEventListener("change", function () {
+      const selectedArea = areaSelect.value;
+      const selectedPLTD = this.value;
+      mesinSelect.innerHTML = '<option value="">-- Pilih Mesin --</option>';
+
+      if (data[selectedArea] && data[selectedArea][selectedPLTD]) {
+        mesinSelect.disabled = false;
+        data[selectedArea][selectedPLTD].forEach(mesin => {
+          const opt = document.createElement("option");
+          opt.value = mesin;
+          opt.textContent = mesin;
+          mesinSelect.appendChild(opt);
+        });
+      } else {
+        mesinSelect.disabled = true;
+      }
+    });
+  </script>
+
+</body>
+</html>
